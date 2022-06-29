@@ -6,6 +6,7 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @ServletComponentScan  // LoginCheckFilter(扫描WebFilter注解)
 @EnableTransactionManagement // 开启事务管理
+@EnableCaching  // 开启缓存注解功能
 public class ReggieApplication {
     public static void main(String[] args) {
         SpringApplication.run(ReggieApplication.class, args);

@@ -12,6 +12,8 @@ import com.itheima.reggie.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.QueryTimeoutException;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +38,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping
+    @CacheEvict(value = "setmealCache", allEntries = true)  // 清除setmealCahce这个分类下所有缓存数据
     public R<String> save(@RequestBody SetmealDto setmealDto) {
         log.info(setmealDto.toString());
         setmealService.saveWithDish(setmealDto);
@@ -85,6 +88,7 @@ public class SetmealController {
      *                      只能输入localhost:8080/list2?userId=xxx 才能执行相应的方法
      */
     @DeleteMapping
+    @CacheEvict(value = "setmealCache", allEntries = true)  // 清除setmealCahce这个分类下所有缓存数据
     public R<String> delete(@RequestParam List<Long> ids){
         log.info("ids: {}", ids);
         setmealService.removeWithDish(ids);
@@ -97,6 +101,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/list")
+    @Cacheable(value = "setmealCache", key = "#setmeal.categoryId + '_' + #setmeal.status")
     public R<List<Setmeal>> list(Setmeal setmeal){
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(setmeal.getCategoryId() != null, Setmeal::getCategoryId, setmeal.getCategoryId());
